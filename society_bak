@@ -14,6 +14,7 @@
 struct person{
   int SELF;
   int happy;
+  int id;
 };
 
 /*****************************
@@ -41,7 +42,8 @@ int rando(){
 int main (int nargs, char * args){
   srand(time(NULL));
   int popl;
-  int k=100;
+  int k = 20;
+  int idnum = 0;
   struct person pop[k]; //setting up null population at base lien
   //the creation of a society takes a sec
   while(k){
@@ -49,7 +51,9 @@ int main (int nargs, char * args){
     printf("%d\t", val);
     struct person sean; //unisex name
     sean.SELF = val;
+    sean.id = idnum++;
     pop[k] = sean;
+    printf("%o,\t",pop[k]);
     k--;
   }
   return 0;
