@@ -33,7 +33,7 @@ int cutmeup(int runs);
  * a new persons personality
  *****************************/
 int rando(){
-  int val = rand();
+  int val = (rand()+rand());
   if (val%2 != 0) {
     val = true;
   }else{
@@ -92,6 +92,24 @@ void questionnaire(struct person pop[ARRAYLEN]){
   return;
 }
 
+int punishment(int flag){
+  int temp = (rand()%10); // 0-9
+  if (flag == 0){
+    int pun = (rand()%10);
+    //printf("%d and %d \n", temp, pun);
+    if(temp == pun){
+      return 50;
+    }else{
+      return 0;
+    }
+  }else{
+    if (temp > 4){
+      return 75;
+    }else{
+      return 0;
+    }
+  }
+}
 /*************************************
  * This is where the
  * main part of the project
@@ -106,6 +124,27 @@ void dothething(struct person pop[]){
   int mod;
   int k = 0;
   printf("Run %d results:\n", TIMES);
+while (k < ARRAYLEN){
+      if (k == i){
+        k++;
+      }
+      if (pop[k].SELF == true){
+        selfish++;
+      }else{
+        altruistic++;
+      }
+      k++;
+    }
+k=0;
+  if(selfish > altruistic){
+    FATCATS = selfish - altruistic;
+    FATCATS = FATCATS * (-1);
+  }else{
+    FATCATS = altruistic - selfish;
+  }
+  printf("%d FATCATS : %d altru : %d self\n", FATCATS, altruistic, selfish);
+  selfish=0;
+  altruistic=0;
   while(i < ARRAYLEN){
     while (k < ARRAYLEN){
       if (k == i){
@@ -118,7 +157,16 @@ void dothething(struct person pop[]){
       }
       k++;
     }
-    //mod should signify the weight of others opinions/actions on the individual
+ 
+/*  if(selfish > altruistic){
+    FATCATS = selfish - altruistic;
+    printf("%d : FATCATS\n", FATCATS);
+    FATCATS = FATCATS * (-1);
+  }else{
+    FATCATS = altruistic - selfish;
+  }
+*/
+   //mod should signify the weight of others opinions/actions on the individual
       mod = ((selfish * -1) + altruistic)%10;
       selfish = 0;
       altruistic = 0;
@@ -142,16 +190,26 @@ void dothething(struct person pop[]){
     printresults(pop[i]);
     i++;
   } 
-  if(selfish > altruistic){
+
+  /*if(selfish > altruistic){
     FATCATS = selfish - altruistic;
     FATCATS *= -1;
   }else{
     FATCATS = altruistic - selfish;
-  }
+  }*/
+
   i = 0;
+  printf("%d : Government modifier\t", FATCATS);
+  int res = 0; 
   while(i < ARRAYLEN){
     pop[i].happy += FATCATS;
     i++;
+    if(FATCATS<0 && pop[i].SELF==true){
+      res = punishment(true);
+    }else if(FATCATS>0 && pop[i].SELF==false){
+      res = punishment(false);
+    }
+    pop[i].happy -= res;
   }
   FATCATS = 0;
   printf("%d was the number in question\n", question);
